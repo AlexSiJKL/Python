@@ -48,6 +48,7 @@ fall_speed = 0
 gravity = 0.1
 background_speed = 1
 is_Jumping = True # Jumping check
+is_Floor = False # Position check
 
 # Define a custom event for game over
 GAMEOVER_EVENT = pygame.USEREVENT + 1
@@ -67,15 +68,19 @@ while running:
         # Mouse clicks
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1: # Left click
-                print("Left click")
-                print(square_position)
-                if not is_Jumping:
+                if not is_Jumping and not is_Floor:
                      fall_speed = -7 # Jumping higth
                      is_Jumping = True
+                elif not is_Jumping and is_Floor:
+                     fall_speed = 7 # Reverse jumping higth
+                     is_Jumping = True    
             elif event.button == 2: # Middle click
                 print("Middle click")
             elif event.button == 3: # Right click
-                print("Right click")
+                fall_speed = -10 if not is_Floor else 10  # Change fall speed according to the new gravity
+                gravity = -gravity
+                is_Floor = not is_Floor
+                is_Jumping = True
         
 
     # Update hero's position based on gravity
@@ -96,14 +101,18 @@ while running:
     screen.blit(background_image, (background_x1, 0))
     screen.blit(background_image, (background_x2, 0))
 
-    # Check if the hero touches the bottom of the screen (collision detection)
-    if square_position[1] + square_size >= 600:
+    # Check if the hero touches the bottom and top of the screen (collision detection)
+    if square_position[1] + square_size >= 600: # Bottom
         square_position[1] = 600 - square_size
         fall_speed = 0
-        # pygame.event.post(pygame.event.Event(GAMEOVER_EVENT))  # Trigger game over
-    
-
-    if fall_speed == 0 : is_Jumping = False# is_Jumping status
+        gravity = 0.1
+        is_Jumping = False
+        
+    if square_position[1] <= 0: # Top
+        square_position[1] = 0
+        fall_speed = 0
+        gravity = -0.1
+        is_Jumping = False
 
 
     # Render the current frame of the hero's GIF
