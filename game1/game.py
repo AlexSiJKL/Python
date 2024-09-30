@@ -27,6 +27,14 @@ running = True
 square_size = 64
 square_position = [150, 150]
 
+# Initialize background properties
+background_image = pygame.image.load('game1/images/background.gif')
+background_width, background_height = 1000, 600
+background_image = pygame.transform.scale(background_image, (background_width, background_height))
+
+background_x1 = 0
+background_x2 = background_width
+
 # Load GIF frames
 gif_frames = load_gif('game1/images/hero.gif')
 if not gif_frames:  # Check if frames were loaded
@@ -38,6 +46,7 @@ frame_index = 0
 #physics
 fallSpeed = 0
 gravity = 0.1
+background_speed = 1
 
 # Define a custom event for gameover
 GAMEOVER_EVENT = pygame.USEREVENT + 1
@@ -56,18 +65,28 @@ while running:
         if event.type == GAMEOVER_EVENT:
             handle_gameover()  # Call the game over handler function
 
-    # Update square position for gravity
+    # Update hero position for gravity
     fallSpeed += gravity
     square_position[1] += fallSpeed
+
+    # Move background to the left
+    background_x1 -= background_speed
+    background_x2 -= background_speed
+    # If the first background has completely gone off-screen, move it to the right after the second background
+    if background_x1 <= -background_width:
+        background_x1 = background_x2 + background_width
+    # If the second background has completely gone off-screen, move it to the right after the first background
+    if background_x2 <= -background_width:
+        background_x2 = background_x1 + background_width
+    # Draw background
+    screen.blit(background_image, (background_x1, 0))
+    screen.blit(background_image, (background_x2, 0))
 
     # Check for collision with the bottom of the screen
     if square_position[1] + square_size >= 600:
         square_position[1] = 600 - square_size
         fallSpeed = 0
-        pygame.event.post(pygame.event.Event(GAMEOVER_EVENT))
-
-    # Fill the screen with a color to wipe away anything from last frame
-    screen.fill("white")
+        #pygame.event.post(pygame.event.Event(GAMEOVER_EVENT))
 
     # RENDER YOUR GAME HERE
     # Draw the current frame of the GIF
