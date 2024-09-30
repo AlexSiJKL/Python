@@ -47,7 +47,7 @@ frame_index = 0  # Initialize frame index for animation
 fall_speed = 0
 gravity = 0.1
 background_speed = 1
-is_Jumping = False # Jumping check
+is_Jumping = True # Jumping check
 
 # Define a custom event for game over
 GAMEOVER_EVENT = pygame.USEREVENT + 1
