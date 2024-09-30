@@ -3,6 +3,7 @@ import pygame
 import random
 from PIL import Image
 
+
 # Function to load GIF and convert it to Pygame frames
 def load_gif(filename):
 	frames = []
@@ -17,33 +18,30 @@ def load_gif(filename):
 			frames.append(pygame.transform.scale(pygame_image, (square_size, square_size)))  # Resize if needed
 	return frames
 
+# Function to handle the game over event
+def handle_gameover():
+	print("You lose!")
+
+
 # Initialize pygame and set up the screen
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
 clock = pygame.time.Clock()
 running = True
 
-# cursor
-pygame.mouse.set_cursor(pygame.cursors.Cursor(pygame.SYSTEM_CURSOR_CROSSHAIR))
-
 # Hero properties (square)
 square_size = 64
 square_position = [150, 150]
 
 # Background properties
-background_image = pygame.image.load('game1/images/background.gif')
+background_image = pygame.image.load('images/background.gif')
 background_width, background_height = 1000, 600
 background_image = pygame.transform.scale(background_image, (background_width, background_height))
 
 background_x1 = 0
 background_x2 = background_width
 
-# Load GIF frames for the hero
-gif_frames = load_gif('game1/images/hero.gif')
-if not gif_frames:  # Check if frames were loaded successfully
-	print("Error: No frames loaded from GIF.")
-	running = False  # Exit if no frames loaded
-
+# Amination variables
 frame_index = 0  # Initialize frame index for animation
 
 # Physics variables
@@ -56,9 +54,16 @@ is_Floor = False # Position check
 # Define a custom event for game over
 GAMEOVER_EVENT = pygame.USEREVENT + 1
 
-# Function to handle the game over event
-def handle_gameover():
-	print("You lose!")
+
+# Load GIF frames for the hero
+gif_frames = load_gif('images/hero.gif')
+if not gif_frames:  # Check if frames were loaded successfully
+	print("Error: No frames loaded from GIF.")
+	running = False  # Exit if no frames loaded
+
+
+# Set cursor to an image
+pygame.mouse.set_cursor(pygame.cursors.Cursor(pygame.SYSTEM_CURSOR_CROSSHAIR))
 
 # Main game loop
 while running:
