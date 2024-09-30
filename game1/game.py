@@ -1,11 +1,10 @@
 # Basic Pygame "game loop" with moving background and GIF animation
-import pygame
-import random
+import pygame, os
 from PIL import Image
 
 
 # Function to load GIF and convert it to Pygame frames
-def load_gif(filename):
+def Load_gif(filename):
 	frames = []
 	with Image.open(filename) as img:
 		for frame in range(0, img.n_frames):
@@ -19,8 +18,58 @@ def load_gif(filename):
 	return frames
 
 # Function to handle the game over event
-def handle_gameover():
-	print("You lose!")
+def Handle_gameover():
+    print("You lose!")
+
+# Function to handle gravitation and border limits
+def Gravitation():
+    global fall_speed, gravity, is_Jumping
+
+    # Update hero's position based on gravity
+    fall_speed += gravity
+    square_position[1] += fall_speed
+
+    # Check if the hero touches the bottom and top of the screen (collision detection)
+    if square_position[1] + square_size >= 600: # Bottom
+        square_position[1] = 600 - square_size
+        fall_speed = 0
+        gravity = 0.1
+        is_Jumping = False
+        
+    if square_position[1] <= 0: # Top
+        square_position[1] = 0
+        fall_speed = 0
+        gravity = -0.1
+        is_Jumping = False
+
+def Animate():
+    global frame_index
+    # Render the current frame of the hero's GIF
+    if gif_frames:
+        screen.blit(gif_frames[frame_index], (square_position[0], square_position[1]))
+
+    # Update the frame index for the hero's GIF animation
+    frame_index = (frame_index + 1) % len(gif_frames)
+
+def Animate_background():
+    global background_x1, background_x2
+    # Move background to the left
+    background_x1 -= background_speed
+    background_x2 -= background_speed
+
+    # Loop backgrounds when they go off-screen
+    if background_x1 <= -background_width:
+        background_x1 = background_x2 + background_width
+    if background_x2 <= -background_width:
+        background_x2 = background_x1 + background_width
+
+    # Draw the background images
+    screen.blit(background_image, (background_x1, 0))
+    screen.blit(background_image, (background_x2, 0))
+
+# System variables
+SCRIPT_PATH = os.getcwd()
+ASSETS_PATH = SCRIPT_PATH + "\images"
 
 
 # Initialize pygame and set up the screen
@@ -34,7 +83,7 @@ square_size = 64
 square_position = [150, 150]
 
 # Background properties
-background_image = pygame.image.load('images/background.gif')
+background_image = pygame.image.load(ASSETS_PATH + '\\background.gif')
 background_width, background_height = 1000, 600
 background_image = pygame.transform.scale(background_image, (background_width, background_height))
 
@@ -56,7 +105,7 @@ GAMEOVER_EVENT = pygame.USEREVENT + 1
 
 
 # Load GIF frames for the hero
-gif_frames = load_gif('images/hero.gif')
+gif_frames = Load_gif(ASSETS_PATH + '\hero.gif')
 if not gif_frames:  # Check if frames were loaded successfully
 	print("Error: No frames loaded from GIF.")
 	running = False  # Exit if no frames loaded
@@ -71,8 +120,10 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
         if event.type == GAMEOVER_EVENT:
-            handle_gameover()
+            Handle_gameover()
+            
         # Mouse clicks
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1: # Left click
@@ -90,45 +141,14 @@ while running:
                 is_Floor = not is_Floor
                 is_Jumping = True
         
+    # Animate background
+    Animate_background()
 
-    # Update hero's position based on gravity
-    fall_speed += gravity
-    square_position[1] += fall_speed
+    # Handle gravitation
+    Gravitation()
 
-    # Move background to the left
-    background_x1 -= background_speed
-    background_x2 -= background_speed
-
-    # Loop backgrounds when they go off-screen
-    if background_x1 <= -background_width:
-        background_x1 = background_x2 + background_width
-    if background_x2 <= -background_width:
-        background_x2 = background_x1 + background_width
-
-    # Draw the background images
-    screen.blit(background_image, (background_x1, 0))
-    screen.blit(background_image, (background_x2, 0))
-
-    # Check if the hero touches the bottom and top of the screen (collision detection)
-    if square_position[1] + square_size >= 600: # Bottom
-        square_position[1] = 600 - square_size
-        fall_speed = 0
-        gravity = 0.1
-        is_Jumping = False
-        
-    if square_position[1] <= 0: # Top
-        square_position[1] = 0
-        fall_speed = 0
-        gravity = -0.1
-        is_Jumping = False
-
-
-    # Render the current frame of the hero's GIF
-    if gif_frames:
-        screen.blit(gif_frames[frame_index], (square_position[0], square_position[1]))
-
-    # Update the frame index for the hero's GIF animation
-    frame_index = (frame_index + 1) % len(gif_frames)
+    # Animation
+    Animate()
 
     # Update the display with the rendered content
     pygame.display.flip()
