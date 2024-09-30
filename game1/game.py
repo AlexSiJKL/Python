@@ -23,6 +23,9 @@ screen = pygame.display.set_mode((800, 600))
 clock = pygame.time.Clock()
 running = True
 
+# cursor
+pygame.mouse.set_cursor(pygame.cursors.Cursor(pygame.SYSTEM_CURSOR_CROSSHAIR))
+
 # Hero properties (square)
 square_size = 64
 square_position = [150, 150]
@@ -69,10 +72,10 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1: # Left click
                 if not is_Jumping and not is_Floor:
-                     fall_speed = -7 # Jumping higth
+                     fall_speed = -5 # Jumping higth
                      is_Jumping = True
                 elif not is_Jumping and is_Floor:
-                     fall_speed = 7 # Reverse jumping higth
+                     fall_speed = 5 # Reverse jumping higth
                      is_Jumping = True    
             elif event.button == 2: # Middle click
                 print("Middle click")
