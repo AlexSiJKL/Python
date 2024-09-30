@@ -47,6 +47,7 @@ frame_index = 0  # Initialize frame index for animation
 fall_speed = 0
 gravity = 0.1
 background_speed = 1
+is_Jumping = False # Jumping check
 
 # Define a custom event for game over
 GAMEOVER_EVENT = pygame.USEREVENT + 1
@@ -57,49 +58,63 @@ def handle_gameover():
 
 # Main game loop
 while running:
-	# Poll for events (such as closing the window)
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			running = False
-		if event.type == GAMEOVER_EVENT:
-			handle_gameover()
+    # Poll for events (such as closing the window)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == GAMEOVER_EVENT:
+            handle_gameover()
+        # Mouse clicks
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1: # Left click
+                print("Left click")
+                print(square_position)
+                if not is_Jumping:
+                     fall_speed = -7 # Jumping higth
+                     is_Jumping = True
+            elif event.button == 2: # Middle click
+                print("Middle click")
+            elif event.button == 3: # Right click
+                print("Right click")
+        
 
-	# Update hero's position based on gravity
-	fall_speed += gravity
-	square_position[1] += fall_speed
+    # Update hero's position based on gravity
+    fall_speed += gravity
+    square_position[1] += fall_speed
 
-	# Move background to the left
-	background_x1 -= background_speed
-	background_x2 -= background_speed
+    # Move background to the left
+    background_x1 -= background_speed
+    background_x2 -= background_speed
 
-	# Loop backgrounds when they go off-screen
-	if background_x1 <= -background_width:
-		background_x1 = background_x2 + background_width
-	if background_x2 <= -background_width:
-		background_x2 = background_x1 + background_width
+    # Loop backgrounds when they go off-screen
+    if background_x1 <= -background_width:
+        background_x1 = background_x2 + background_width
+    if background_x2 <= -background_width:
+        background_x2 = background_x1 + background_width
 
-	# Draw the background images
-	screen.blit(background_image, (background_x1, 0))
-	screen.blit(background_image, (background_x2, 0))
+    # Draw the background images
+    screen.blit(background_image, (background_x1, 0))
+    screen.blit(background_image, (background_x2, 0))
 
-	# Check if the hero touches the bottom of the screen (collision detection)
-	if square_position[1] + square_size >= 600:
-		square_position[1] = 600 - square_size
-		fall_speed = 0
-		# pygame.event.post(pygame.event.Event(GAMEOVER_EVENT))  # Trigger game over
+    # Check if the hero touches the bottom of the screen (collision detection)
+    if square_position[1] + square_size >= 600:
+        square_position[1] = 600 - square_size
+        fall_speed = 0
+        # pygame.event.post(pygame.event.Event(GAMEOVER_EVENT))  # Trigger game over
+    
 
-	# Render the current frame of the hero's GIF
-	if gif_frames:
-		screen.blit(gif_frames[frame_index], (square_position[0], square_position[1]))
+    if fall_speed == 0 : is_Jumping = False# is_Jumping status
 
-	# Update the frame index for the hero's GIF animation
-	frame_index = (frame_index + 1) % len(gif_frames)
 
-	# Update the display with the rendered content
-	pygame.display.flip()
+    # Render the current frame of the hero's GIF
+    if gif_frames:
+        screen.blit(gif_frames[frame_index], (square_position[0], square_position[1]))
 
-	# Cap the frame rate at 60 FPS
-	clock.tick(60)
+    # Update the frame index for the hero's GIF animation
+    frame_index = (frame_index + 1) % len(gif_frames)
 
-# Quit pygame when the game loop ends
-pygame.quit()
+    # Update the display with the rendered content
+    pygame.display.flip()
+
+    # Cap the frame rate at 60 FPS
+    clock.tick(60)
