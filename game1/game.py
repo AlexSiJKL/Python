@@ -68,8 +68,8 @@ def Animate_background():
     screen.blit(background_image, (background_x2, 0))
 
 # System variables
-SCRIPT_PATH = os.getcwd()
-ASSETS_PATH = SCRIPT_PATH + "\images"
+SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
+ASSETS_PATH = os.path.join(SCRIPT_PATH, "images")
 
 
 # Initialize pygame and set up the screen
