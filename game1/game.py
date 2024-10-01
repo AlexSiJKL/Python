@@ -128,7 +128,7 @@ GAMEOVER_EVENT = pygame.USEREVENT + 1
 
 
 # Load GIF frames for the hero
-gif_frames = Load_gif(ASSETS_PATH + '\hero.gif')
+gif_frames = Load_gif(ASSETS_PATH + '\\hero.gif')
 if not gif_frames:  # Check if frames were loaded successfully
 	print("Error: No frames loaded from GIF.")
 	running = False  # Exit if no frames loaded
