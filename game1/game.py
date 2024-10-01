@@ -67,16 +67,34 @@ def Animate_background():
     screen.blit(background_image, (background_x1, 0))
     screen.blit(background_image, (background_x2, 0))
 
+def Draw_laser():
+    # Get mouse position
+    msPos = pygame.mouse.get_pos()
+    
+    # Draw laser
+    pygame.draw.line(screen, RED, (square_position[0], square_position[1]), msPos, 4)
+
+
 # System variables
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 ASSETS_PATH = os.path.join(SCRIPT_PATH, "images")
-
 
 # Initialize pygame and set up the screen
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
 clock = pygame.time.Clock()
 running = True
+
+# Color variables
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
+WHITE = (255, 255, 255)
+BLACK = (255, 0, 0)
+GREEN = (0, 255, 0)
+YELLOW = (255, 255, 0)
+
+# Laser variables
+shooting_laser = False
 
 # Hero properties (square)
 square_size = 64
@@ -123,16 +141,16 @@ while running:
 
         if event.type == GAMEOVER_EVENT:
             Handle_gameover()
-            
+
         # Mouse clicks
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1: # Left click
                 if not is_Jumping and not is_Floor:
-                     fall_speed = -5 # Jumping higth
-                     is_Jumping = True
+                    fall_speed = -5 # Jumping higth
+                    is_Jumping = True
                 elif not is_Jumping and is_Floor:
-                     fall_speed = 5 # Reverse jumping higth
-                     is_Jumping = True    
+                    fall_speed = 5 # Reverse jumping higth
+                    is_Jumping = True    
             elif event.button == 2: # Middle click
                 print("Middle click")
             elif event.button == 3: # Right click
@@ -141,6 +159,16 @@ while running:
                 is_Floor = not is_Floor
                 is_Jumping = True
         
+        # Keyboard button clicks
+        if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    shooting_laser = True
+
+
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_SPACE:
+                shooting_laser = False
+
     # Animate background
     Animate_background()
 
@@ -149,6 +177,9 @@ while running:
 
     # Animation
     Animate()
+
+    # Draw laser
+    if shooting_laser: Draw_laser()
 
     # Update the display with the rendered content
     pygame.display.flip()
