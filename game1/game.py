@@ -14,7 +14,7 @@ def Load_gif(filename):
 			size = img.size
 			# Create a pygame image from string
 			pygame_image = pygame.image.fromstring(data, size, 'RGBA')  # Use 'RGBA' as the format
-			frames.append(pygame.transform.scale(pygame_image, (square_size, square_size)))  # Resize if needed
+			frames.append(pygame.transform.scale(pygame_image, (hero_size, hero_size)))  # Resize if needed
 	return frames
 
 # Function to handle the game over event
@@ -27,26 +27,28 @@ def Gravitation():
 
     # Update hero's position based on gravity
     fall_speed += gravity
-    square_position[1] += fall_speed
+    hero_position[1] += fall_speed
 
     # Check if the hero touches the bottom and top of the screen (collision detection)
-    if square_position[1] + square_size >= 600: # Bottom
-        square_position[1] = 600 - square_size
+    if hero_position[1] + hero_size >= 600: # Bottom
+        hero_position[1] = 600 - hero_size
         fall_speed = 0
         gravity = 0.1
         is_Jumping = False
         
-    if square_position[1] <= 0: # Top
-        square_position[1] = 0
+    if hero_position[1] <= 0: # Top
+        hero_position[1] = 0
         fall_speed = 0
         gravity = -0.1
         is_Jumping = False
 
 def Animate():
-    global frame_index
-    # Render the current frame of the hero's GIF
+    global frame_index, rotation_angle
+    # Render the current frame of the hero's GIF with rotation
     if gif_frames:
-        screen.blit(gif_frames[frame_index], (square_position[0], square_position[1]))
+        rotated_image = pygame.transform.rotate(gif_frames[frame_index], rotation_angle)
+        rotated_rect = rotated_image.get_rect(center=(hero_position[0] + hero_size // 2, hero_position[1] + hero_size // 2))
+        screen.blit(rotated_image, rotated_rect.topleft)
 
     # Update the frame index for the hero's GIF animation
     frame_index = (frame_index + 1) % len(gif_frames)
@@ -72,7 +74,7 @@ def Draw_laser():
     msPos = pygame.mouse.get_pos()
     
     # Draw laser
-    pygame.draw.line(screen, RED, (square_position[0], square_position[1]), msPos, 4)
+    pygame.draw.line(screen, RED, (hero_position[0], hero_position[1]), msPos, 4)
 
 
 # System variables
@@ -97,8 +99,8 @@ YELLOW = (255, 255, 0)
 shooting_laser = False
 
 # Hero properties (square)
-square_size = 64
-square_position = [150, 150]
+hero_size = 64
+hero_position = [150, 150]
 
 # Background properties
 background_image = pygame.image.load(ASSETS_PATH + '\\background.gif')
@@ -110,6 +112,9 @@ background_x2 = background_width
 
 # Amination variables
 frame_index = 0  # Initialize frame index for animation
+
+# Rotation variables
+rotation_angle = 0  # Initial angle for rotation
 
 # Physics variables
 fall_speed = 0
@@ -177,6 +182,12 @@ while running:
 
     # Animation
     Animate()
+
+    # Increment the rotation angle for each frame
+    if is_Floor: rotation_angle += 3  # Adjust the speed of rotation as needed
+    else: rotation_angle -= 3
+    if rotation_angle >= 360:
+        rotation_angle = 0  # Reset the angle if it exceeds 360 degrees
 
     # Draw laser
     if shooting_laser: Draw_laser()
