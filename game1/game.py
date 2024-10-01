@@ -184,8 +184,8 @@ while running:
     Animate()
 
     # Increment the rotation angle for each frame
-    if is_Floor: rotation_angle += 3  # Adjust the speed of rotation as needed
-    else: rotation_angle -= 3
+    if is_Floor: rotation_angle += 2.5  # Adjust the speed of rotation as needed
+    else: rotation_angle -= 2.5
     if rotation_angle >= 360:
         rotation_angle = 0  # Reset the angle if it exceeds 360 degrees
 
