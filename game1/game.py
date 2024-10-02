@@ -166,8 +166,8 @@ while running:
         
         # Keyboard button clicks
         if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    shooting_laser = True
+            if event.key == pygame.K_SPACE:
+                shooting_laser = True
 
 
         if event.type == pygame.KEYUP:
