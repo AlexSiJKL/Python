@@ -62,13 +62,15 @@ def Gameover():
                     Restart()
 
 def Restart():
-    global hero_position, fall_speed, gravity, running, random_rect_bottom, random_rect_top, points
+    global hero_position, fall_speed, gravity, running, random_rect_bottom, random_rect_top, points, obstacles
     points = 0
     hero_position = [150, 150]
     fall_speed = 0
     gravity = 0.1
     running = True
-    random_rect_top, random_rect_bottom = Generate_random_rectangle()
+    obstacles.clear()
+    obstacles = [Generate_2_random_rectangles() for _ in range (1)]
+    
 
 def Gravitation():
     global fall_speed, gravity
@@ -86,8 +88,9 @@ def Gravitation():
         hero_position[1] = 0
 
 def Collision_detection():
-    if hero_rect.colliderect(random_rect_top) or hero_rect.colliderect(random_rect_bottom):
-        Gameover()
+    for random_rect_top, random_rect_bottom in obstacles:
+        if hero_rect.colliderect(random_rect_top) or hero_rect.colliderect(random_rect_bottom):
+            Gameover()
 
 def Animate_background():
     global background_x1, background_x2
@@ -106,7 +109,7 @@ def Animate_background():
     screen.blit(background_image, (background_x2, 0))
 
 # Obstacles generator
-def Generate_random_rectangle():
+def Generate_2_random_rectangles():
 
     global random_rect_top, random_rect_bottom
 
@@ -125,22 +128,29 @@ def Generate_random_rectangle():
     
     return random_rect_top, random_rect_bottom
 
-random_rect_top, random_rect_bottom = Generate_random_rectangle()
+obstacles = [Generate_2_random_rectangles() for _ in range (1)]
 
 def Obstacles_if():
     global random_rect_top, random_rect_bottom
 
-    if random_rect_top.right < 0:
-        random_rect_top, random_rect_bottom = Generate_random_rectangle()
-        return random_rect_top, random_rect_bottom
+    if random_rect_top.right < 600:
+        obstacles.append(Generate_2_random_rectangles())
+    print(len(obstacles))
+
+    # Delete first pair of rects
+    if obstacles[0][0].right < 0:
+        obstacles.pop(0)
        
 def Obstacles_moving():
-    random_rect_top.x -= background_speed
-    random_rect_bottom.x -= background_speed
-    random_rect_bottom_surf = pygame.image.load(os.path.join(ASSETS_PATH, 'wood_bottom.gif'))
-    random_rect_top_surf = pygame.image.load(os.path.join(ASSETS_PATH, 'wood_top.gif'))
-    screen.blit(random_rect_bottom_surf, (random_rect_bottom.x, random_rect_bottom.y))
-    screen.blit(random_rect_top_surf, (random_rect_top.x, random_rect_top.y - 400 + random_rect_top.height))
+    for random_rect_top, random_rect_bottom in obstacles:
+        random_rect_top.x -= background_speed
+        random_rect_bottom.x -= background_speed
+        
+        random_rect_bottom_surf = pygame.image.load(os.path.join(ASSETS_PATH, 'wood_bottom.gif'))
+        random_rect_top_surf = pygame.image.load(os.path.join(ASSETS_PATH, 'wood_top.gif'))
+
+        screen.blit(random_rect_bottom_surf, (random_rect_bottom.x, random_rect_bottom.y))
+        screen.blit(random_rect_top_surf, (random_rect_top.x, random_rect_top.y - 400 + random_rect_top.height))
 
 def Obstacles():
     Obstacles_if()
@@ -163,7 +173,7 @@ background_speed = 1
 points = 0
 
 # Hero properties (square)
-hero_size = 64
+hero_size = 50
 hero_position = [150, 150]
 
 # Hero frames
