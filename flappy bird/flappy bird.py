@@ -142,12 +142,13 @@ def Obstacles_if():
         obstacles.pop(0)
        
 def Obstacles_moving():
+    
+    random_rect_bottom_surf = pygame.image.load(os.path.join(ASSETS_PATH, 'wood_bottom.gif'))
+    random_rect_top_surf = pygame.image.load(os.path.join(ASSETS_PATH, 'wood_top.gif'))
+    
     for random_rect_top, random_rect_bottom in obstacles:
         random_rect_top.x -= background_speed
         random_rect_bottom.x -= background_speed
-        
-        random_rect_bottom_surf = pygame.image.load(os.path.join(ASSETS_PATH, 'wood_bottom.gif'))
-        random_rect_top_surf = pygame.image.load(os.path.join(ASSETS_PATH, 'wood_top.gif'))
 
         screen.blit(random_rect_bottom_surf, (random_rect_bottom.x, random_rect_bottom.y))
         screen.blit(random_rect_top_surf, (random_rect_top.x, random_rect_top.y - 400 + random_rect_top.height))
