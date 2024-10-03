@@ -149,14 +149,17 @@ def Obstacles():
 def Points():
     global points
     points += background_speed
-    return points
+    points_text = font_small.render(("Your score is " + str(round(points, 2)) + " points"), True, RED)
+    points_text_rect = points_text.get_rect(topleft=(20,20))
+    pygame.draw.rect(screen, WHITE, points_text.get_rect(topleft=(20,20)).inflate(10, 10)) # .inflate increases the rectangle (#,#)
+    screen.blit(points_text, (points_text_rect))
 
 # Physics variables
 fall_speed = 0
 gravity = 0.1
 background_speed = 1
 
-# Scores
+# Points
 points = 0
 
 # Hero properties (square)
