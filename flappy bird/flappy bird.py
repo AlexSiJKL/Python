@@ -13,10 +13,12 @@ screen = pygame.display.set_mode((800, 600))
 clock = pygame.time.Clock()
 running = True
 
-# Colors
+# Colors and gifs
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
+random_rect_bottom_surf = pygame.image.load(os.path.join(ASSETS_PATH, 'wood_bottom.gif'))
+random_rect_top_surf = pygame.image.load(os.path.join(ASSETS_PATH, 'wood_top.gif'))
 
 # Font
 font_big = pygame.font.Font(None, 70)
@@ -67,13 +69,12 @@ def Gameover():
                     Restart()
 
 def Restart():
-    global hero_position, fall_speed, gravity, running, random_rect_bottom, random_rect_top, points, obstacles
+    global hero_position, fall_speed, gravity, running, points, obstacles
     points = 0
     hero_position = [150, 150]
     fall_speed = 0
     gravity = 0.1
     running = True
-    obstacles.clear()
     obstacles = [Generate_2_random_rectangles() for _ in range (1)]
     
 
@@ -115,9 +116,6 @@ def Animate_background():
 
 # Obstacles generator
 def Generate_2_random_rectangles():
-
-    global random_rect_top, random_rect_bottom
-
     rect_top_width = 50
     rect_top_height = random.randint(50, (screen.get_height() - 50 - 250))
     rect_top_x = screen.get_width() + rect_top_width
@@ -136,21 +134,14 @@ def Generate_2_random_rectangles():
 obstacles = [Generate_2_random_rectangles() for _ in range (1)]
 
 def Obstacles_if():
-    global random_rect_top, random_rect_bottom
-
-    if random_rect_top.right < 600:
+    # Check last rect in the list
+    if obstacles[-1][0].right < 600:
         obstacles.append(Generate_2_random_rectangles())
-    print(len(obstacles))
-
     # Delete first pair of rects
     if obstacles[0][0].right < 0:
         obstacles.pop(0)
        
-def Obstacles_moving():
-    
-    random_rect_bottom_surf = pygame.image.load(os.path.join(ASSETS_PATH, 'wood_bottom.gif'))
-    random_rect_top_surf = pygame.image.load(os.path.join(ASSETS_PATH, 'wood_top.gif'))
-    
+def Obstacles_moving(): 
     for random_rect_top, random_rect_bottom in obstacles:
         random_rect_top.x -= background_speed
         random_rect_bottom.x -= background_speed
@@ -213,13 +204,11 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1: # Left click
                 fall_speed = -3 # Jumping higth
-                current_frame = (current_frame + 1) % len(hero_frames)  # Next frame
         
         # Keyboard
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 fall_speed = -3 # Jumping higth
-                current_frame = (current_frame + 1) % len(hero_frames)  # Next frame
     
     Animate_background()
     Hero()
