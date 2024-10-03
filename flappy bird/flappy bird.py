@@ -24,6 +24,11 @@ font_small = pygame.font.Font(None, 30)
 
 # Hero
 def Hero():
+    global hero_rect, current_frame, last_frame_time
+    now = pygame.time.get_ticks()
+    if now - last_frame_time > frame_interval:
+        current_frame = (current_frame + 1) % len(hero_frames)
+        last_frame_time = now
     global hero_rect
     hero_surf = hero_frames[current_frame]
     hero_rect = hero_surf.get_rect(topleft=(hero_position[0], hero_position[1]))
@@ -218,10 +223,10 @@ while running:
     
     Animate_background()
     Hero()
-    Points()
     Gravitation()
     Obstacles()
     Collision_detection()
+    Points()
 
     # flip() the display to put your work on screen
     pygame.display.flip()
