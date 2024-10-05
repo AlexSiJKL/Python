@@ -1,5 +1,5 @@
 # Example file showing a basic pygame "game loop"
-import pygame, os
+import pygame, os, random
 
 # Game setup
 cell_size = 20
@@ -19,8 +19,22 @@ game_field = [[0 for _ in range(board_h)] for _ in range(board_w)]
 
 def Create_figure():
     global is_figure_need, figure_coords, game_field
-    if is_figure_need == True:
-        figure_coords = [[0,5], [0,6], [1,5], [1,6], [1,7]]
+    if is_figure_need:
+        figure_variant = random.randint(0,7)
+        
+        figures = {
+            0: [[0,board_w//2]], # 1x1
+            1: [[0,board_w//2],[0,board_w//2+1],[1,board_w//2],[1,board_w//2+1]], # Block 2x2
+            2: [[0,board_w//2-1],[0,board_w//2],[0,board_w//2+1],[0,board_w//2+2]], # Line 4x1
+            3: [[0,board_w//2-1],[0,board_w//2],[1,board_w//2],[1,board_w//2+1]], # Z
+            4: [[1,board_w//2-1],[0,board_w//2],[1,board_w//2],[0,board_w//2+1]], # Reflected Z
+            5: [[0,board_w//2-1],[0,board_w//2],[0,board_w//2+1],[1,board_w//2+1]], # L
+            6: [[0,board_w//2-1],[0,board_w//2],[0,board_w//2+1],[1,board_w//2-1]], # Reflected L
+            7: [[0,board_w//2-1],[0,board_w//2],[0,board_w//2+1],[1,board_w//2]] # T
+        }
+
+        figure_coords = figures.get(figure_variant)
+
         for el in figure_coords:
             game_field[el[0]][el[1]] = 1
         is_figure_need = False
