@@ -20,34 +20,30 @@ game_field = [[0 for _ in range(board_h)] for _ in range(board_w)]
 def Create_figure():
     global isNeedFigure, figure_coords, game_field
     if isNeedFigure == True:
-        figure_coords = [(0,5), (0,6), (1,5), (1,6)]
-        for x, y in figure_coords:
-            game_field[x][y] = 1
+        figure_coords = [[0,5], [0,6], [1,5], [1,6]]
+        for el in figure_coords:
+            game_field[el[0]][el[1]] = 1
         isNeedFigure = False
-        return game_field, figure_coords
     
 def Move_figure_left():
     global figure_coords, game_field
-    new_coords = []
     can_move = True
 
-    for x, y in figure_coords:
-        if y - 1 < 0 or game_field[x][y-1] != 0:
+    for el in figure_coords:
+        if el[1] - 1 < 0 or (game_field[el[0]][el[1]-1] == 2):
             can_move = False
             break
             
     if can_move == True:
-        for x, y in figure_coords:
-            game_field[x][y] = 0
+        for el in figure_coords:
+            game_field[el[0]][el[1]] = 0
 
-        for x, y in figure_coords:
-            game_field[x][y-1] = 1
+        for el in figure_coords:
+            game_field[el[0]][el[1]-1] = 1
 
-        for x, y in figure_coords:
-            new_coords[x][y-1] = 1
-
-    figure_coords = new_coords
-    return figure_coords, game_field
+        for i in range(len(figure_coords)):
+            figure_coords[i][1] -= 1
+    
 
 def Move_figure_right():
     print("Right")
