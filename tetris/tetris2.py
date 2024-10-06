@@ -3,19 +3,19 @@ import pygame, os, random
 
 # Game setup
 cell_size = 20
-board_w = 20
-board_h = 20 # 3 lines for figure creating
+game_field_w = 10
+game_field_h = 10
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((board_w * cell_size, board_h * cell_size))
+screen = pygame.display.set_mode((game_field_w * cell_size, game_field_h * cell_size))
 clock = pygame.time.Clock()
 running = True
 
 # Game variables
 is_figure_need = True
 
-game_field = [[0 for _ in range(board_h)] for _ in range(board_w)]
+game_field = [[0 for _ in range(game_field_h)] for _ in range(game_field_w)]
 
 def Create_figure():
     global is_figure_need, figure_coords, game_field
@@ -23,14 +23,14 @@ def Create_figure():
         figure_variant = random.randint(0,7)
         
         figures = {
-            0: [[0,board_w//2]], # 1x1
-            1: [[0,board_w//2],[0,board_w//2+1],[1,board_w//2],[1,board_w//2+1]], # Block 2x2
-            2: [[0,board_w//2-1],[0,board_w//2],[0,board_w//2+1],[0,board_w//2+2]], # Line 4x1
-            3: [[0,board_w//2-1],[0,board_w//2],[1,board_w//2],[1,board_w//2+1]], # Z
-            4: [[1,board_w//2-1],[0,board_w//2],[1,board_w//2],[0,board_w//2+1]], # Reflected Z
-            5: [[0,board_w//2-1],[0,board_w//2],[0,board_w//2+1],[1,board_w//2+1]], # L
-            6: [[0,board_w//2-1],[0,board_w//2],[0,board_w//2+1],[1,board_w//2-1]], # Reflected L
-            7: [[0,board_w//2-1],[0,board_w//2],[0,board_w//2+1],[1,board_w//2]] # T
+            0: [[0,game_field_w//2]], # 1x1
+            1: [[0,game_field_w//2],[0,game_field_w//2+1],[1,game_field_w//2],[1,game_field_w//2+1]], # Block 2x2
+            2: [[0,game_field_w//2-1],[0,game_field_w//2],[0,game_field_w//2+1],[0,game_field_w//2+2]], # Line 4x1
+            3: [[0,game_field_w//2-1],[0,game_field_w//2],[1,game_field_w//2],[1,game_field_w//2+1]], # Z
+            4: [[1,game_field_w//2-1],[0,game_field_w//2],[1,game_field_w//2],[0,game_field_w//2+1]], # Reflected Z
+            5: [[0,game_field_w//2-1],[0,game_field_w//2],[0,game_field_w//2+1],[1,game_field_w//2+1]], # L
+            6: [[0,game_field_w//2-1],[0,game_field_w//2],[0,game_field_w//2+1],[1,game_field_w//2-1]], # Reflected L
+            7: [[0,game_field_w//2-1],[0,game_field_w//2],[0,game_field_w//2+1],[1,game_field_w//2]] # T
         }
 
         figure_coords = figures.get(figure_variant)
@@ -63,7 +63,7 @@ def Move_figure_right():
     can_move = True
 
     for el in figure_coords:
-        if el[1] + 1 >= board_w or (game_field[el[0]][el[1]+1] == 2):
+        if el[1] + 1 >= game_field_w or (game_field[el[0]][el[1]+1] == 2):
             can_move = False
             break
             
@@ -82,9 +82,10 @@ def Move_figure_down():
     can_move = True
 
     for el in figure_coords:
-        if el[0] + 1 >= board_h or (game_field[el[0]+1][el[1]] == 2):
+        if el[0] + 1 >= game_field_h or (game_field[el[0]+1][el[1]] == 2):
             for el in figure_coords:
                 game_field[el[0]][el[1]] = 2
+                Clean_row()
             is_figure_need = True
             return
             
@@ -98,10 +99,31 @@ def Move_figure_down():
         for i in range(len(figure_coords)):
             figure_coords[i][0] += 1
 
-def Draw_game_field():
+def Rotate_figure():
+    can_rotate = True
+    print("Rotate")
+
+def Clean_row():
+    row_sums = []
+    rows_to_delete = []
     os.system('cls')
-    for row in game_field:
-        print(row)
+    for i in range(len(game_field)):
+        row_sum = sum(game_field[i])
+        row_sums.append(row_sum)
+        print(row_sum)
+
+        if row_sum == game_field_w * 2:
+            rows_to_delete.append(i)
+
+    for i in rows_to_delete:
+        del game_field[i]
+        game_field.insert(0, [0] * game_field_w)
+            
+
+def Draw_game_field():
+    #os.system('cls')
+    #for row in game_field:
+    #    print(row)
     
     for i in range(len(game_field)):
         for j in range(len(game_field[i])):
@@ -124,6 +146,8 @@ while running:
                 Move_figure_left()
             if event.key == pygame.K_RIGHT:
                 Move_figure_right()
+            if event.key == pygame.K_UP:
+                Clean_row()
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("white")
