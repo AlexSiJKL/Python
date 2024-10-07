@@ -71,7 +71,8 @@ def Gameover():
                     Restart()
 
 def Restart():
-    global hero_position, fall_speed, gravity, running, points, obstacles, worm_money
+    global hero_position, fall_speed, gravity, running, points, obstacles, worm_money, way
+    way = 0
     points = 0
     hero_position = [150, 150]
     fall_speed = 0
@@ -106,10 +107,12 @@ def Collision_detection():
         worm_money.x +=900 # move worm money to new position
 
 def Animate_background():
-    global background_x1, background_x2
+    global background_x1, background_x2, way
     # Move background to the left
     background_x1 -= background_speed
     background_x2 -= background_speed
+
+    way += background_speed
 
     # Loop backgrounds when they go off-screen
     if background_x1 <= -background_width:
@@ -147,7 +150,7 @@ def Move_worm_money():
     worm_money.x -= background_speed
     screen.blit(worm_money_frames[current_worm_money_frame], (worm_money.x, worm_money.y))
     
-    if worm_money.x < -110: worm_money = Create_worm_money() # Create new worm money if miss last one
+    if worm_money.x < - 300: worm_money = Create_worm_money() # Create new worm money if miss last one
 
 # Obstacles generator
 def Generate_2_random_rectangles():
@@ -200,6 +203,7 @@ def Points():
 fall_speed = 0
 gravity = 0.1
 background_speed = 1
+way = 0
 
 # Points
 points = 0
