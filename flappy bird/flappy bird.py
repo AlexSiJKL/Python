@@ -36,6 +36,8 @@ def Hero():
     hero_rect = hero_surf.get_rect(topleft=(hero_position[0], hero_position[1]))
     return screen.blit(hero_surf, hero_rect)
 
+# Bills and coins
+
 # Function to handle gravitation and border limits
 def Gameover():
     global running
@@ -69,13 +71,14 @@ def Gameover():
                     Restart()
 
 def Restart():
-    global hero_position, fall_speed, gravity, running, points, obstacles
+    global hero_position, fall_speed, gravity, running, points, obstacles, worm_money
     points = 0
     hero_position = [150, 150]
     fall_speed = 0
     gravity = 0.1
     running = True
     obstacles = [Generate_2_random_rectangles() for _ in range (1)]
+    worm_money = Create_worm_money()
     
 
 def Gravitation():
@@ -94,9 +97,13 @@ def Gravitation():
         hero_position[1] = 0
 
 def Collision_detection():
+    global points
     for random_rect_top, random_rect_bottom in obstacles:
         if hero_rect.colliderect(random_rect_top) or hero_rect.colliderect(random_rect_bottom):
             Gameover()
+    if hero_rect.colliderect(worm_money):
+        points += 500
+        worm_money.x +=900 # move worm money to new position
 
 def Animate_background():
     global background_x1, background_x2
@@ -113,6 +120,35 @@ def Animate_background():
     # Draw the background images
     screen.blit(background_image, (background_x1, 0))
     screen.blit(background_image, (background_x2, 0))
+
+# Worm money
+def Create_worm_money():
+    rect_worm_money_width = 110
+    rect_worm_money_height = 72
+    rect_worm_money_x = 975 # 975
+    rect_worm_money_y = random.randint(1,528)
+
+    rect_worm_money = pygame.Rect(rect_worm_money_x, rect_worm_money_y, rect_worm_money_width, rect_worm_money_height)
+
+    return rect_worm_money
+
+worm_money = Create_worm_money()
+is_worm_money_need = False
+current_worm_money_frame = 0
+last_worm_money_frame_time = pygame.time.get_ticks()
+worm_money_frame_interval = 200  # 200 ms between frames
+
+def Move_worm_money():
+    global current_worm_money_frame, last_worm_money_frame_time, worm_money
+
+    now = pygame.time.get_ticks()
+    if now - last_worm_money_frame_time > worm_money_frame_interval:
+        current_worm_money_frame = (current_worm_money_frame + 1) % len(worm_money_frames)
+        last_worm_money_frame_time = now
+    worm_money.x -= background_speed
+    screen.blit(worm_money_frames[current_worm_money_frame], (worm_money.x, worm_money.y))
+    
+    if worm_money.x < (-worm_money.width): worm_money = Create_worm_money() # Create new worm money if miss last one
 
 # Obstacles generator
 def Generate_2_random_rectangles():
@@ -180,6 +216,13 @@ hero_frames = [
     pygame.image.load(os.path.join(ASSETS_PATH, 'hero_3.gif')),
     pygame.image.load(os.path.join(ASSETS_PATH, 'hero_2.gif'))
 ]
+# Worm money
+worm_money_frames = [
+    pygame.image.load(os.path.join(ASSETS_PATH, '500_1.gif')),
+    pygame.image.load(os.path.join(ASSETS_PATH, '500_2.gif')),
+    pygame.image.load(os.path.join(ASSETS_PATH, '500_3.gif')),
+    pygame.image.load(os.path.join(ASSETS_PATH, '500_2.gif'))
+]
 
 frame_interval = 200
 current_frame = 0
@@ -216,10 +259,10 @@ while running:
     Obstacles()
     Collision_detection()
     Points()
+    Move_worm_money()
 
     # flip() the display to put your work on screen
     pygame.display.flip()
-
     clock.tick(60)  # limits FPS to 60
 
 pygame.quit()

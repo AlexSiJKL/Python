@@ -18,7 +18,7 @@ is_figure_need = True
 game_field = [[0 for _ in range(game_field_h)] for _ in range(game_field_w)]
 
 def Create_figure():
-    global is_figure_need, figure_coords, game_field
+    global is_figure_need, figure_coords, game_field, figure_variant
     if is_figure_need:
         figure_variant = random.randint(0,7)
         
@@ -100,8 +100,23 @@ def Move_figure_down():
             figure_coords[i][0] += 1
 
 def Rotate_figure():
+    global figure_coords
     can_rotate = True
-    print("Rotate")
+    figure_coords_after_rotate = []
+    if figure_variant == 0:
+        pass
+    elif figure_variant == 1:
+        pass
+    elif figure_variant == 7:
+        print(figure_variant)
+        print(figure_coords)
+
+        '''
+        for i in range(len(figure_coords)):
+            figure_coords_after_rotate.append([figure_coords[i][1], -figure_coords[i][0]])
+            print(figure_coords_after_rotate)
+            figure_coords = figure_coords_after_rotate\
+        '''
 
 def Clean_row():
     row_sums = []
@@ -147,7 +162,7 @@ while running:
             if event.key == pygame.K_RIGHT:
                 Move_figure_right()
             if event.key == pygame.K_UP:
-                Clean_row()
+                Rotate_figure()
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("white")
