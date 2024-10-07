@@ -17,7 +17,7 @@ class HitboxTests():
 
         # Hitboxes far away from eachother
         # Expected - False
-        if not h1.DoHitboxesCollide(h2):
+        if not h1.DoHitboxesCollide([h2]):
             print("Test 1 - passed!")
             correctTests += 1
         else:
@@ -29,7 +29,7 @@ class HitboxTests():
 
         # Hitboxes touch by a corner
         # Expected - True
-        if h1.DoHitboxesCollide(h2):
+        if h1.DoHitboxesCollide([h2]):
             print("Test 2 - passed!")
             correctTests += 1
         else:
@@ -41,7 +41,7 @@ class HitboxTests():
 
         # Hitboxes touch by a side
         # Expected - True
-        if h1.DoHitboxesCollide(h2):
+        if h1.DoHitboxesCollide([h2]):
             print("Test 3 - passed!")
             correctTests += 1
         else:
@@ -53,7 +53,7 @@ class HitboxTests():
 
         # Hitboxes are the same
         # Expected - True
-        if h1.DoHitboxesCollide(h2):
+        if h1.DoHitboxesCollide([h2]):
             print("Test 4 - passed!")
             correctTests += 1
         else:
@@ -65,7 +65,7 @@ class HitboxTests():
 
         # Hitboxes touch by a corner
         # Expected - True
-        if h1.DoHitboxesCollide(h2):
+        if h1.DoHitboxesCollide([h2]):
             print("Test 5 - passed!")
             correctTests += 1
         else:
@@ -77,7 +77,7 @@ class HitboxTests():
 
         # Hitboxes touch by a side
         # Expected - True
-        if h1.DoHitboxesCollide(h2):
+        if h1.DoHitboxesCollide([h2]):
             print("Test 6 - passed!")
             correctTests += 1
         else:
