@@ -126,14 +126,13 @@ def Create_worm_money():
     rect_worm_money_width = 110
     rect_worm_money_height = 72
     rect_worm_money_x = 975 # 975
-    rect_worm_money_y = random.randint(1,528)
+    rect_worm_money_y = 0#random.randint(1,528)
 
     rect_worm_money = pygame.Rect(rect_worm_money_x, rect_worm_money_y, rect_worm_money_width, rect_worm_money_height)
 
     return rect_worm_money
 
 worm_money = Create_worm_money()
-is_worm_money_need = False
 current_worm_money_frame = 0
 last_worm_money_frame_time = pygame.time.get_ticks()
 worm_money_frame_interval = 200  # 200 ms between frames
@@ -148,7 +147,7 @@ def Move_worm_money():
     worm_money.x -= background_speed
     screen.blit(worm_money_frames[current_worm_money_frame], (worm_money.x, worm_money.y))
     
-    if worm_money.x < (-worm_money.width): worm_money = Create_worm_money() # Create new worm money if miss last one
+    if worm_money.x < -110: worm_money = Create_worm_money() # Create new worm money if miss last one
 
 # Obstacles generator
 def Generate_2_random_rectangles():
@@ -258,8 +257,8 @@ while running:
     Gravitation()
     Obstacles()
     Collision_detection()
-    Points()
     Move_worm_money()
+    Points()
 
     # flip() the display to put your work on screen
     pygame.display.flip()
