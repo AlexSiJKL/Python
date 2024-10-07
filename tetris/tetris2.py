@@ -15,7 +15,7 @@ running = True
 # Game variables
 is_figure_need = True
 
-game_field = [[0 for _ in range(game_field_h)] for _ in range(game_field_w)]
+game_field = [[0 for _ in range(game_field_w)] for _ in range(game_field_h)]
 
 def Create_figure():
     global is_figure_need, figure_coords, game_field, figure_variant
@@ -23,59 +23,100 @@ def Create_figure():
         figure_variant = random.randint(0,7)
         
         figures = {
-            0: [[0,game_field_w//2]], # 1x1
-            1: [[0,game_field_w//2],[0,game_field_w//2+1],[1,game_field_w//2],[1,game_field_w//2+1]], # Block 2x2
-            2: [[0,game_field_w//2-1],[0,game_field_w//2],[0,game_field_w//2+1],[0,game_field_w//2+2]], # Line 4x1
-            3: [[0,game_field_w//2-1],[0,game_field_w//2],[1,game_field_w//2],[1,game_field_w//2+1]], # Z
-            4: [[1,game_field_w//2-1],[0,game_field_w//2],[1,game_field_w//2],[0,game_field_w//2+1]], # Reflected Z
-            5: [[0,game_field_w//2-1],[0,game_field_w//2],[0,game_field_w//2+1],[1,game_field_w//2+1]], # L
-            6: [[0,game_field_w//2-1],[0,game_field_w//2],[0,game_field_w//2+1],[1,game_field_w//2-1]], # Reflected L
-            7: [[0,game_field_w//2-1],[0,game_field_w//2],[0,game_field_w//2+1],[1,game_field_w//2]] # T
+            # 1x1
+            0: [
+                [1]
+            ],
+            # Block 2x2
+            1: [
+                [1, 1],
+                [1, 1]
+            ],
+            # Line 4x1
+            2: [
+                [1, 1, 1, 1],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0]
+            ],
+            # Z
+            3: [
+                [1, 1, 0],
+                [0, 1, 1],
+                [0, 0, 0]
+            ],
+            # Reflected Z
+            4: [
+                [0, 1, 1],
+                [1, 1, 0],
+                [0, 0, 0]
+            ],
+            # L
+            5: [
+                [1, 0, 0],
+                [1, 1, 1],
+                [0, 0, 0]
+            ],
+            # Reflected L
+            6:[
+                [0, 0, 1],
+                [1, 1, 1],
+                [0, 0, 0]
+            ],
+            # T
+            7: [
+                [0, 1, 0],
+                [1, 1, 1],
+                [0, 0, 0]
+            ]
         }
 
         figure_coords = figures.get(figure_variant)
 
-        for el in figure_coords:
-            game_field[el[0]][el[1]] = 1
         is_figure_need = False
+
+        for i in range(len(figure_coords)):
+            for j in range(len(figure_coords[i])):
+                game_field[i][j + game_field_w//2] += figure_coords[i][j]
+
+        print(game_field)
+
     
 def Move_figure_left():
-    global figure_coords, game_field
+    global game_field
     can_move = True
 
-    for el in figure_coords:
-        if el[1] - 1 < 0 or (game_field[el[0]][el[1]-1] == 2):
-            can_move = False
-            break
+    for i in range(len(game_field)):
+        for j in range(len(game_field[i])):
+            if game_field[i][j] == 1:
+                if j - 1 < 0 or game_field[i][j-1] == 2:
+                    can_move = False
+                    break
             
     if can_move == True:
-        for el in figure_coords:
-            game_field[el[0]][el[1]] = 0
-
-        for el in figure_coords:
-            game_field[el[0]][el[1]-1] = 1
-
-        for i in range(len(figure_coords)):
-            figure_coords[i][1] -= 1
+        for i in range(len(game_field)):
+            for j in range(len(game_field[i])):
+                if game_field[i][j] == 1:
+                    game_field[i][j-1] = 1
+                    game_field[i][j] = 0
 
 def Move_figure_right():
-    global figure_coords, game_field
+    global game_field
     can_move = True
 
-    for el in figure_coords:
-        if el[1] + 1 >= game_field_w or (game_field[el[0]][el[1]+1] == 2):
-            can_move = False
-            break
+    for i in range(len(game_field)):
+        for j in range(len(game_field[i])):
+            if game_field[i][j] == 1:
+                if j + 1 >= game_field_w or game_field[i][j+1] == 2:
+                    can_move = False
+                    break
             
     if can_move == True:
-        for el in figure_coords:
-            game_field[el[0]][el[1]] = 0
-
-        for el in figure_coords:
-            game_field[el[0]][el[1]+1] = 1
-
-        for i in range(len(figure_coords)):
-            figure_coords[i][1] += 1
+        for i in range(len(game_field)):
+            for j in range(len(game_field[i])-1, -1, -1):
+                if game_field[i][j] == 1:
+                    game_field[i][j + 1] = 1
+                    game_field[i][j] = 0
 
 def Move_figure_down():
     global figure_coords, game_field, is_figure_need
