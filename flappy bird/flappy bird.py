@@ -126,7 +126,7 @@ def Create_worm_money():
     rect_worm_money_width = 110
     rect_worm_money_height = 72
     rect_worm_money_x = 975 # 975
-    rect_worm_money_y = 0#random.randint(1,528)
+    rect_worm_money_y = random.randint(1,528)
 
     rect_worm_money = pygame.Rect(rect_worm_money_x, rect_worm_money_y, rect_worm_money_width, rect_worm_money_height)
 
