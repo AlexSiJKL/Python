@@ -17,69 +17,218 @@ is_figure_need = True
 
 game_field = [[0 for _ in range(game_field_w)] for _ in range(game_field_h)]
 
+rotate_figures_0 = {
+    0: [
+        [1]
+    ],
+    1: [
+        [1]
+    ],
+    2: [
+        [1]
+    ],
+    3: [
+        [1]
+    ]        
+}
+
+rotate_figures_1 = {
+    0: [
+        [1, 1],
+        [1, 1]
+    ],
+    1: [
+        [1, 1],
+        [1, 1]
+    ],
+    2: [
+        [1, 1],
+        [1, 1]
+    ],
+    3: [
+        [1, 1],
+        [1, 1]
+    ]
+}
+
+rotate_figures_2 = {
+    0: [
+        [0, 0, 0, 0],
+        [1, 1, 1, 1],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+    ],
+    1: [
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0]
+    ],
+    2: [
+        [0, 0, 0, 0],
+        [1, 1, 1, 1],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+    ],
+    3: [
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0]
+    ]
+}
+
+rotate_figures_3 = {
+    0: [
+        [1, 1, 0],
+        [0, 1, 1],
+        [0, 0, 0]
+    ],
+    1: [
+        [0, 0, 1],
+        [0, 1, 1],
+        [0, 1, 0]
+    ],
+    2: [
+        [1, 1, 0],
+        [0, 1, 1],
+        [0, 0, 0]
+    ],
+    3: [
+        [0, 0, 1],
+        [0, 1, 1],
+        [0, 1, 0]
+    ]
+}
+
+rotate_figures_4 = {
+    0: [
+        [0, 1, 1],
+        [1, 1, 0],
+        [0, 0, 0]
+    ],
+    1: [
+        [0, 1, 0],
+        [0, 1, 1],
+        [0, 0, 1]
+    ],
+    2: [
+        [0, 1, 1],
+        [1, 1, 0],
+        [0, 0, 0]
+    ],
+    3: [
+        [0, 1, 0],
+        [0, 1, 1],
+        [0, 0, 1]
+    ]
+}
+
+rotate_figures_5 = {
+    0: [
+        [1, 0, 0],
+        [1, 1, 1],
+        [0, 0, 0]
+    ],
+    1: [
+        [0, 1, 1],
+        [0, 1, 0],
+        [0, 1, 0]
+    ],
+    2: [
+        [0, 0, 0],
+        [1, 1, 1],
+        [0, 0, 1]
+    ],
+    3: [
+        [0, 1, 0],
+        [0, 1, 0],
+        [1, 1, 0]
+    ],
+}
+
+
+rotate_figures_6 = {
+    0: [
+        [0, 0, 1],
+        [1, 1, 1],
+        [0, 0, 0]
+    ],
+    1: [
+        [0, 1, 0],
+        [0, 1, 0],
+        [0, 1, 1]
+    ],
+    2: [
+        [0, 0, 0],
+        [1, 1, 1],
+        [1, 0, 0]
+    ],
+    3: [
+        [1, 1, 0],
+        [0, 1, 0],
+        [0, 1, 0]
+    ],
+}
+
+rotate_figures_7 = {
+    0: [
+        [0, 1, 0],
+        [1, 1, 1],
+        [0, 0, 0]
+    ],
+    1: [
+        [0, 1, 0],
+        [0, 1, 1],
+        [0, 1, 0]
+    ],
+    2: [
+        [0, 0, 0],
+        [1, 1, 1],
+        [0, 1, 0]
+    ],
+    3: [
+        [0, 1, 0],
+        [1, 1, 0],
+        [0, 1, 0]
+    ]
+}
+
+rotate_figures = {
+    0: rotate_figures_0,
+    1: rotate_figures_1,
+    2: rotate_figures_2,
+    3: rotate_figures_3,
+    4: rotate_figures_4,
+    5: rotate_figures_5,
+    6: rotate_figures_6,
+    7: rotate_figures_7
+}
+
 def Create_figure():
-    global is_figure_need, figure_coords, game_field, figure_variant
+    global is_figure_need, figure_coords, game_field, figure_variant, figure_coords_lc, figure_rotate_position
     if is_figure_need:
+        figure_coords_lc = [0, game_field_w//2]
+        figure_rotate_position = 0
         figure_variant = random.randint(0,7)
         
         figures = {
-            # 1x1
-            0: [
-                [1]
-            ],
-            # Block 2x2
-            1: [
-                [1, 1],
-                [1, 1]
-            ],
-            # Line 4x1
-            2: [
-                [1, 1, 1, 1],
-                [0, 0, 0, 0],
-                [0, 0, 0, 0],
-                [0, 0, 0, 0]
-            ],
-            # Z
-            3: [
-                [1, 1, 0],
-                [0, 1, 1],
-                [0, 0, 0]
-            ],
-            # Reflected Z
-            4: [
-                [0, 1, 1],
-                [1, 1, 0],
-                [0, 0, 0]
-            ],
-            # L
-            5: [
-                [1, 0, 0],
-                [1, 1, 1],
-                [0, 0, 0]
-            ],
-            # Reflected L
-            6:[
-                [0, 0, 1],
-                [1, 1, 1],
-                [0, 0, 0]
-            ],
-            # T
-            7: [
-                [0, 1, 0],
-                [1, 1, 1],
-                [0, 0, 0]
-            ]
+            0: rotate_figures_0[0], # 1x1
+            1: rotate_figures_1[0], # Block 2x2
+            2: rotate_figures_2[0], # Line 4x1
+            3: rotate_figures_3[0], # Z
+            4: rotate_figures_4[0], # Reflected Z
+            5: rotate_figures_5[0], # L
+            6: rotate_figures_6[0], # Reflected L
+            7: rotate_figures_7[0] # T
         }
 
         figure_coords = figures.get(figure_variant)
-
         is_figure_need = False
 
         for i in range(len(figure_coords)):
             for j in range(len(figure_coords[i])):
-                game_field[i][j + game_field_w//2] += figure_coords[i][j]
-
-        print(game_field)
+                game_field[i + figure_coords_lc[0]][j + figure_coords_lc[1]] += figure_coords[i][j]
 
     
 def Move_figure_left():
@@ -122,43 +271,59 @@ def Move_figure_down():
     global figure_coords, game_field, is_figure_need
     can_move = True
 
-    for el in figure_coords:
-        if el[0] + 1 >= game_field_h or (game_field[el[0]+1][el[1]] == 2):
-            for el in figure_coords:
-                game_field[el[0]][el[1]] = 2
-                Clean_row()
-            is_figure_need = True
-            return
-            
-    if can_move == True:
-        for el in figure_coords:
-            game_field[el[0]][el[1]] = 0
+    for i in range(len(game_field) -1, -1, -1):
+        for j in range(len(game_field[i])):
+            if game_field[i][j] == 1:
+                if i + 1 >= game_field_h or (game_field[i + 1][j] == 2):
+                    can_move = False
+                    break
+        if not can_move:
+            break
+                
+    if can_move:
+        for i in range(len(game_field) - 1, -1, -1):
+            for j in range(len(game_field[i])):
+                if game_field[i][j] == 1:
+                    game_field[i][j] = 0
+                    game_field[i + 1][j] = 1
+    else:
+        for i in range(len(game_field)):
+            for j in range(len(game_field[i])):
+                if game_field[i][j] == 1:
+                    game_field[i][j] = 2
+        is_figure_need = True
+        Clean_row()
 
-        for el in figure_coords:
-            game_field[el[0]+1][el[1]] = 1
+def Check_for_rotating():
+    global can_rotate, figure_coords_lc
+    can_rotate = True
 
-        for i in range(len(figure_coords)):
-            figure_coords[i][0] += 1
+    for i in range(len(figure_coords)):
+        for j in range(len(figure_coords[i])):
+            if i + figure_coords_lc[0] >=len(game_field) or j + figure_coords_lc[1] >=len(game_field[0]):
+                can_rotate = False
+                break
+            if game_field[i+figure_coords_lc[0]][j+figure_coords_lc[1]] == 2:
+                can_rotate = False
+                break            
+    print(can_rotate)
+
+
+def Figure_rotate_position():
+    global figure_rotate_position
+    figure_rotate_position = (figure_rotate_position + 1) % 4
 
 def Rotate_figure():
-    global figure_coords
-    can_rotate = True
-    figure_coords_after_rotate = []
-    if figure_variant == 0:
-        pass
-    elif figure_variant == 1:
-        pass
-    elif figure_variant == 7:
-        print(figure_variant)
-        print(figure_coords)
-
-        '''
+    global figure_rotate_position, figure_coords_lc
+    Check_for_rotating()
+    if can_rotate:
+        Figure_rotate_position()
+        print(len(figure_coords))
         for i in range(len(figure_coords)):
-            figure_coords_after_rotate.append([figure_coords[i][1], -figure_coords[i][0]])
-            print(figure_coords_after_rotate)
-            figure_coords = figure_coords_after_rotate\
-        '''
-
+            for j in range(len(figure_coords[i])):
+                game_field[i + figure_coords_lc[0]][j + figure_coords_lc[1]] = rotate_figures[figure_variant][figure_rotate_position][i][j]
+        print(figure_rotate_position)
+    
 def Clean_row():
     row_sums = []
     rows_to_delete = []
@@ -197,10 +362,19 @@ while running:
         # Keyboard
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_DOWN:
+                if figure_coords_lc[0] + 1 < len(game_field) - len(figure_coords):
+                    figure_coords_lc[0] +=1
+                print(figure_coords_lc)
                 Move_figure_down()
             if event.key == pygame.K_LEFT:
+                if figure_coords_lc[1] - 1 >= 0:
+                    figure_coords_lc[1] -=1
+                print(figure_coords_lc)
                 Move_figure_left()
             if event.key == pygame.K_RIGHT:
+                if figure_coords_lc[1] + 1 <= len(game_field[0]) - len(figure_coords[0]):
+                    figure_coords_lc[1] += 1
+                print(figure_coords_lc)
                 Move_figure_right()
             if event.key == pygame.K_UP:
                 Rotate_figure()
