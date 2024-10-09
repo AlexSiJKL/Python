@@ -4,7 +4,7 @@ import pygame, os, random
 # Game setup
 cell_size = 20
 game_field_w = 10
-game_field_h = 10
+game_field_h = 20
 
 # pygame setup
 pygame.init()
@@ -348,10 +348,10 @@ def Draw_game_field():
     
     for i in range(len(game_field)):
         for j in range(len(game_field[i])):
-            if game_field[j][i] == 1:
-                pygame.draw.rect(screen, "blue", (i * cell_size, j * cell_size, cell_size, cell_size))
-            if game_field[j][i] == 2:
-                pygame.draw.rect(screen, "red", (i * cell_size, j * cell_size, cell_size, cell_size))
+            if game_field[i][j] == 1:
+                pygame.draw.rect(screen, "blue", (j * cell_size, i * cell_size, cell_size, cell_size))
+            if game_field[i][j] == 2:
+                pygame.draw.rect(screen, "red", (j * cell_size, i * cell_size, cell_size, cell_size))
 
 while running:
     # poll for events
